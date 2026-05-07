@@ -1,0 +1,9 @@
+# Use the core packages without strict version numbers to avoid conflicts
+langchain
+langgraph
+langchain-community
+langchain-openai
+python-dotenv
+atlassian-python-api
+python-gitlab
+chromadb

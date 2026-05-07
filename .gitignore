@@ -1,0 +1,32 @@
+# --- Python Environment ---
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+
+# --- API Keys & Secrets ---
+.env
+.flaskenv
+secrets.json
+
+# --- Local Vector Stores (Jira, Confluence, GitLab) ---
+# We ignore these because they can be large and contain 
+# private company data that shouldn't be on GitHub.
+faiss_jira_index/
+faiss_conf_index/
+faiss_git_index/
+*.index
+*.pkl
+
+# --- OS & IDE Specific ---
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# --- Logs & Metadata ---
+*.log
+.coverage
+htmlcov/
