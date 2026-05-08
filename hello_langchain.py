@@ -8,10 +8,7 @@ load_dotenv()
 
 # 2. Extract and Validate the Key
 raw_key = os.getenv("GROQ_API_KEY")
-if raw_key:
-    print(f"Key loaded successfully: {raw_key[:6]}********")
-else:
-    print("Key not found! Check your .env file.")
+
 # If for some reason the key is wrapped in a way that looks like a function, 
 # we force it to a string here.
 if not isinstance(raw_key, str):
