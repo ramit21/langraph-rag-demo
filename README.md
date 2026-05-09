@@ -10,8 +10,8 @@ source venv/bin/activate # run this everytime you re open the terminal
 
 Step 2: Install dependencies
 ```
-pip install --upgrade pip
-pip install -r requirements.txt
+pip install --upgrade "pip<24.1"
+pip install --prefer-binary -r requirements.txt
 ```
 
 Step 3: Create an account in Groq AI, and create an API key.
