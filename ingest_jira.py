@@ -1,6 +1,8 @@
 import os
 from dotenv import load_dotenv
-from langchain_community.document_loaders import JiraLoader
+from langchain_community.agent_toolkits.jira.toolkit import JiraToolkit
+from langchain_community.utilities.jira import JiraAPIWrapper
+from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_text_splitters import CharacterTextSplitter
@@ -8,19 +10,19 @@ from langchain_text_splitters import CharacterTextSplitter
 load_dotenv()
 
 def ingest_jira():
-    # 1. Setup Jira Connection
-    # Use JQL to pull a small sample first (e.g., tickets from a specific project)
-    loader = JiraLoader(
-        host=os.getenv("JIRA_URL"),
-        url=os.getenv("JIRA_URL"),
-        username=os.getenv("JIRA_USER_EMAIL"),
-        api_token=os.getenv("JIRA_API_TOKEN"),
-        jql="project = 'POC' ORDER BY created DESC",
-        limit=10
-    )
+    # 1. Setup Jira Connection using the Wrapper
+    # It automatically looks for JIRA_API_TOKEN, JIRA_USERNAME (your email), 
+    # and JIRA_INSTANCE_URL (your JIRA_URL) in your .env
+    jira = JiraAPIWrapper()
     
     print("Fetching tickets from Jira...")
-    documents = loader.load()
+    # Run a JQL search through the wrapper
+    # This returns a list of dictionaries containing ticket data
+    issues = jira.run("project = 'POC' ORDER BY created DESC")
+    
+    # Convert the raw string/dict results into LangChain Documents
+    # (The wrapper's .run() usually returns a formatted string of results)
+    documents = [Document(page_content=issues, metadata={"source": "jira"})]
     
     # 2. Split text into chunks (LLMs can't read massive tickets all at once)
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
