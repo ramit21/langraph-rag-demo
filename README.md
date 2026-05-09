@@ -26,7 +26,7 @@ GITLAB_PERSONAL_ACCESS_TOKEN=your_token_here
 GROQ_API_KEY=your_groq_token_here
 ```
 
-Step 5. Test GROQ connectivity running:
+Step 5. Test GROQ connectivity by running:
 ```
 python hello_langchain.py
 ```
