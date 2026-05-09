@@ -4,6 +4,7 @@ Setup and steps:
 
 Step 1: setup python env in your project folder
 ```
+rm -rf venv
 /usr/local/bin/python3 -m venv venv 
 source venv/bin/activate # run this everytime you re open the terminal
 ```
@@ -67,4 +68,7 @@ FAISS (your local vector DB),
 SentenceTransformers embeddings (free, local),
 Groq LLM for answering queries.
 
+```
+python query_jira_rag.py
+```
 
