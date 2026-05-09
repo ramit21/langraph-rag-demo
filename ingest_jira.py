@@ -34,10 +34,11 @@ def ingest_jira():
     
     # 4. Store in ChromaDB
     print(f"Storing {len(docs)} chunks into ChromaDB...")
+    persist_dir = os.getenv("PERSIST_DIRECTORY", "./chroma_db") # Defaults to ./chroma_db if not set
     vectorstore = Chroma.from_documents(
         documents=docs, 
         embedding=embeddings, 
-        persist_directory="./chroma_db"
+        persist_directory=persist_dir
     )
     print("Ingestion Complete! Your Jira data is now local.")
 
