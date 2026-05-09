@@ -19,55 +19,27 @@ def ingest_jira():
         print(f"Failed to connect to Jira: {e}")
         return
 
+    #print("\n=== Underlying Jira Client Attributes ===")
+    #for name in dir(jira.jira):
+    #    if not name.startswith("_"):
+    #        print(name)
+
+
     print("Fetching tickets from Jira...")
 
-    # 2. Agile API endpoint
+    # 2. Give your Jira board id
     board_id = 3
 
-    # 3. Auth header
-    raw_auth = f"{os.getenv('JIRA_USERNAME')}:{os.getenv('JIRA_API_TOKEN')}"
-    encoded_auth = base64.b64encode(raw_auth.encode()).decode()
+    # 3. Use JiraAPIWrapper Agile client
+    response = jira.jira.get_issues_for_board(
+        board_id,
+        jql="project = POC ORDER BY updated DESC"
+    )
 
-    headers = {
-        "Authorization": f"Basic {encoded_auth}",
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-    }
-
-    # 4. JQL
-    jql = "project = POC ORDER BY updated DESC"
-    encoded_jql = requests.utils.quote(jql)
-
-    start_at = 0
-    max_results = 50
-    all_issues = []
-
-    # 5. Pagination loop
-    while True:
-        url = (
-            f"{os.getenv('JIRA_INSTANCE_URL')}/rest/agile/1.0/board/{board_id}/issue"
-            f"?jql={encoded_jql}&startAt={start_at}&maxResults={max_results}"
-        )
-
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
-
-        data = response.json()
-        issues = data.get("issues", [])
-
-        if not issues:
-            break
-
-        all_issues.extend(issues)
-
-        if len(issues) < max_results:
-            break
-
-        start_at += max_results
-
+    all_issues = response.get("issues", [])
     print(f"Fetched {len(all_issues)} Jira issues.\n")
 
-    # ⭐ PRINT ONLY KEY + TYPE + SUMMARY
+    # ⭐ Print clean summary
     print("Jira Issues:")
     for issue in all_issues:
         key = issue.get("key")
@@ -76,7 +48,7 @@ def ingest_jira():
         issue_type = fields.get("issuetype", {}).get("name", "Unknown")
         print(f"{key} [{issue_type}]: {summary}")
 
-    # 6. Convert each issue into a Document
+    # 4. Convert each issue into a Document
     documents = []
     for issue in all_issues:
         key = issue.get("key", "UNKNOWN")
@@ -89,19 +61,19 @@ def ingest_jira():
 
     print(f"\nLoaded {len(documents)} Jira issues into documents.")
 
-    # 7. Split into chunks
+    # 5. Split into chunks
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
     docs = text_splitter.split_documents(documents)
 
-    # 8. Embeddings
+    # 6. Embeddings
     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
     print(f"Indexing {len(docs)} chunks into FAISS...")
 
-    # 9. Build FAISS index
+    # 7. Build FAISS index
     vectorstore = FAISS.from_documents(docs, embeddings)
 
-    # 10. Save locally
+    # 8. Save locally
     index_path = "faiss_index"
     vectorstore.save_local(index_path)
 
