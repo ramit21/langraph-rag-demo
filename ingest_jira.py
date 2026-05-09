@@ -7,6 +7,7 @@ from langchain_community.utilities.jira import JiraAPIWrapper
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 load_dotenv()
 
@@ -66,7 +67,9 @@ def ingest_jira():
     docs = text_splitter.split_documents(documents)
 
     # 6. Embeddings
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
 
     print(f"Indexing {len(docs)} chunks into FAISS...")
 

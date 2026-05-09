@@ -14,9 +14,7 @@ secrets.json
 # --- Local Vector Stores (Jira, Confluence, GitLab) ---
 # We ignore these because they can be large and contain 
 # private company data that shouldn't be on GitHub.
-faiss_jira_index/
-faiss_conf_index/
-faiss_git_index/
+faiss_index/
 *.index
 *.pkl
 
