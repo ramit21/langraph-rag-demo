@@ -57,4 +57,14 @@ Step 7: Ingest Jira into vector DB
 ```
 python ingest_jira.py
 ```
+It connects to your jira instance, pulls jiras from your board.
+chunks them, and then embeds using local and free model SentenceTransformers, and stores the vectors into FAISS DB. 
+
+Step 8: Query Jira faiss store.
+
+LangChain RAG query script that works with: 
+FAISS (your local vector DB),
+SentenceTransformers embeddings (free, local),
+Groq LLM for answering queries.
+
 
