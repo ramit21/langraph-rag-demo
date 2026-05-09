@@ -7,7 +7,7 @@ from langchain_core.prompts import ChatPromptTemplate
 load_dotenv()
 
 # 2. Extract and Validate the Key
-raw_key = os.getenv("GROQ_API_KEY")
+raw_key = os.getenv("OPENAI_API_KEY")
 
 # If for some reason the key is wrapped in a way that looks like a function, 
 # we force it to a string here.
