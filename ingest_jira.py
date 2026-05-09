@@ -15,7 +15,7 @@ def ingest_jira():
         url=os.getenv("JIRA_URL"),
         username=os.getenv("JIRA_USER_EMAIL"),
         api_token=os.getenv("JIRA_API_TOKEN"),
-        jql="project = 'YOUR_PROJECT_KEY' ORDER BY created DESC",
+        jql="project = 'POC' ORDER BY created DESC",
         limit=10
     )
     
