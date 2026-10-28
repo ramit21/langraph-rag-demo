@@ -134,15 +134,48 @@ The important CW metric to track:
 
 **Q3. Security**:
 
+- The Agent core solution sits behind API gw, which does the jwt validation etc for the incoming request before passing it down to agent core.
+
+AWS Bedrock Guardrails (Inference Level):
+- Content Filtering & Denied Topics: Block system prompt injections, jailbreak attempts, and non-banking topics (e.g., financial advice disclaimers).
+- Agent uses middlewares to redact PII data before feeding to the model. 
+- Contextual Grounding Checks: Validate RAG outputs against retrieved documents to prevent hallucinations before the response is returned to the user.
+
+
+Access Control & Fine-Grained Authorization (Tool/Data Level):
+- Identity Propagation: Pass JWT tokens / OAuth2 assertions from the customer session directly into the LangGraph state. The agent must execute tool calls (e.g., get_account_balance) using RBAC / ABAC tied to the authenticated user ID, preventing Cross-Tenant Data Leakage.
+- Least-Privilege IAM Roles: IAM Roles for Service Accounts so the container only has access to specific DynamoDB tables, S3 buckets, Bedrock model ARNs, or access to call external tools.
+
+
+Human-in-the-Loop (HITL) Gating:
+- LangGraph Intercepts: Configure LangGraph nodes to require human approval for state updates involving high-risk financial transactions (e.g., fund transfers, address changes). The agent enters a paused state until an authorized operator/customer approves the payload.
+
 
 
 -----
 
-**Q4. Cost**:
+**Q4. Cost**
 
+Main cost is the multiple LLM calls, 3–5 times per request (planning, tool selection, response aggregation).
 
+Sample monthly estimation:
 
+Assumptions: 100,000 monthly active conversations | Average 3 tool calls per request | ~2,000 input tokens & ~300 output tokens per interaction.
 
+- Primary Reasoning LLM (Claude 3.5 Sonnet) would cost around $2,100 – $2,700.
+- Lightweight Model Routing (Amazon Nova Micro / Lite for simple steps): ~$50 – $100
+- Vector DB / Knowledge Base (S3 Vectors / Aurora PGVector): ~$100 – $300
+- AgentCore Runtime (container hosting): 200 – $400
 
+Total expense: ~$2,600 – $3,750 / mo
+
+Ways to save cost:
+- Semantic caching
+- Lazy load MCP tools and agent skills
+- Context trimming
+- Distillation
+- Context trimming
+- Model routing
+- Quantization
 
 
