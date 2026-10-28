@@ -118,7 +118,17 @@ Latency & Timeout Drift: Track graph execution duration. Rising execution times 
 
 **Q2. Scaling**:
 
+Traditional scaling of pods based on CPU/RAM is not so much relevant in world of Gen AI. Because when agent sends prompt to LLM, or does a tool call or a db lookup, the cpu becomes idle and usage drops. It is just sitting there holding an open socket, waiting for an asynchronous network response. So Agent core takes care of underlying infrastructure scaling as a serverless offering. 
 
+The bottleneck here is how much requests per time unit the LLM supports.
+
+The important CW metric to track:
+- **ActiveSessionCount**: which AgentCore sends every minute to CW. This tracks how many users are actively connected and running agent interactions simultaneously. The platform natively scales up to handle high default thresholds (such as up to 5,000 active concurrent sessions and 200 interactions per second depending on the AWS region). Set a CloudWatch Alarm at ~70% capacity (3,500 concurrent sessions) to proactively request AWS quota increases before hitting HTTP 429 throttling errors.
+- **InvocationLatency & ThrottledRequests**: Tracks downstream LLM API bottlenecks.
+
+**LLM Rate Limits & Provisioned Throughput**:
+- On-Demand Quotas: Your primary bottleneck will often be AWS Bedrock's **Tokens Per Minute (TPM) and Requests Per Minute (RPM)** limits on underlying foundation models (e.g., Claude 3.5 Sonnet).
+- Provisioned Throughput (PT): For high-volume banking workloads, allocate Model Units (MUs) on Bedrock to guarantee dedicated, unthrottled inference throughput regardless of global AWS traffic.
 
 -----
 
