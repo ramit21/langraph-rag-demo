@@ -150,8 +150,6 @@ Access Control & Fine-Grained Authorization (Tool/Data Level):
 Human-in-the-Loop (HITL) Gating:
 - LangGraph Intercepts: Configure LangGraph nodes to require human approval for state updates involving high-risk financial transactions (e.g., fund transfers, address changes). The agent enters a paused state until an authorized operator/customer approves the payload.
 
-
-
 -----
 
 **Q4. Cost**
