@@ -176,4 +176,8 @@ Ways to save cost:
 - Model routing
 - Quantization
 
+**Q5. AgentCore Memory types** 
 
+Ans. Agent core provides thse types of memories:
+- Short term
+-
