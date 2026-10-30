@@ -179,5 +179,15 @@ Ways to save cost:
 **Q5. AgentCore Memory types** 
 
 Ans. Agent core provides thse types of memories:
-- Short term
--
+- Short term (session based)
+- Long term (survives across sessions)
+
+Agent write code to handle events, based on which short term memory is to be updated, or cleared. No code needed for long term, as that is extracted from short term based on stratgies defined. Each strategy has a namespace, against which data is stored. 3 strategy types:
+- User Preference: what a user likes
+- Semantic: facts, like user's name, place of living etc
+- Summary: conversation summary. Unlike other 2, this one has a session id as well in the namespace path, as this is per session.
+
+Reference video: https://www.youtube.com/watch?v=mIvoceSPVj0&list=PLrDJzKfz9AUuq0Rt-I0HyWgCNOYME1f6Y&index=9
+
+
+
