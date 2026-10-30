@@ -189,5 +189,6 @@ Agent write code to handle events, based on which short term memory is to be upd
 
 Reference video: https://www.youtube.com/watch?v=mIvoceSPVj0&list=PLrDJzKfz9AUuq0Rt-I0HyWgCNOYME1f6Y&index=9
 
+You can override the defaults of strategies, select type=Semantic, and give a markdown prompt, on how the memory should be extracted.
 
 
